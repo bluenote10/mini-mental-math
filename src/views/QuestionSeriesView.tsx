@@ -22,7 +22,10 @@ export function QuestionSeriesView(props: QuestionSeriesProps) {
   const questionDone = (correct: boolean, time: number) => {
     setState((s) => ({
       questionNumber: s.questionNumber + 1,
-      questionResults: [...s.questionResults, { correct, time }],
+      questionResults: [
+        ...s.questionResults,
+        { correct, time, type: props.questions[s.questionNumber].type },
+      ],
     }));
   };
 
