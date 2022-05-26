@@ -1,12 +1,17 @@
 import { Button } from "antd";
 import { Card } from "antd";
 import { useRef, useState } from "react";
-import { ButtonGreen, ButtonRed, Center } from "./helper_components";
-import { Question } from "./question";
+import {
+  ButtonGreen,
+  ButtonRed,
+  Center,
+  MainContainer,
+} from "./helper_components";
+import { Question } from "../question";
 
 type QuestionState = "question" | "answer";
 
-type QuestionProps = {
+export type QuestionProps = {
   question: Question;
   questionNumber: number;
   questionNumberMax: number;
@@ -34,7 +39,7 @@ export function QuestionView(props: QuestionProps) {
   };
 
   return (
-    <div style={{ maxWidth: 800, margin: "0 auto" }}>
+    <MainContainer>
       <Center style={{ marginTop: 30, fontSize: 10 }}>
         Question {props.questionNumber} / {props.questionNumberMax}
       </Center>
@@ -62,6 +67,6 @@ export function QuestionView(props: QuestionProps) {
           </>
         )}
       </Center>
-    </div>
+    </MainContainer>
   );
 }

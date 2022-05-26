@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { Button, ButtonProps } from "antd";
+import { GREEN, RED } from "./colors";
 
 type GenericProps = {
   children: React.ReactNode;
@@ -14,6 +15,10 @@ export function Center({ children, style }: GenericProps) {
   );
 }
 
+export function MainContainer({ children, style }: GenericProps) {
+  return <div style={{ maxWidth: 800, margin: "0 auto" }}>{children}</div>;
+}
+
 // https://stackoverflow.com/questions/55717479/how-to-pass-props-to-a-styled-component-in-emotion-using-typescript
 const ButtonWrapper = styled.div<{ color: string }>`
   .ant-btn-primary {
@@ -21,12 +26,6 @@ const ButtonWrapper = styled.div<{ color: string }>`
     border-color: ${(props) => props.color};
   }
 `;
-
-// Antd colors:
-// https://ant.design/docs/spec/colors
-
-const RED = "#f5222d";
-const GREEN = "#52c41a";
 
 // Note that modifying the color of Antd Buttons is a bit awkward, because it needs to set
 // two colors internally, and modifying the class requires a wrapper div:

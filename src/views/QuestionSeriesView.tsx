@@ -1,36 +1,35 @@
 import { useState } from "react";
-import { Questions } from "./question";
+import { Questions } from "../question";
 import { QuestionView } from "./QuestionView";
-
-type SeriesState = "questions" | "summary";
+import { QuestionResult, SummaryTableView } from "./SummaryTableView";
 
 type QuestionSeriesState = {
   questionNumber: number;
-  state: SeriesState;
+  questionResults: Array<QuestionResult>;
 };
 
-type QuestionSeriesProps = {
+export type QuestionSeriesProps = {
   questions: Questions;
+  onDone: () => void;
 };
 
 export function QuestionSeriesView(props: QuestionSeriesProps) {
   const [state, setState] = useState<QuestionSeriesState>({
     questionNumber: 1,
-    state: "questions",
+    questionResults: [],
   });
 
   const questionDone = (correct: boolean, time: number) => {
-    if (state.questionNumber < props.questions.length) {
-      setState((s) => ({ ...s, questionNumber: s.questionNumber + 1 }));
-    } else {
-      setState({
-        questionNumber: 1,
-        state: "summary",
-      });
-    }
+    setState((s) => ({
+      questionNumber: s.questionNumber + 1,
+      questionResults: [...s.questionResults, { correct, time }],
+    }));
   };
 
-  if (state.state === "questions") {
+  const allQuestionsAnswered =
+    state.questionResults.length === props.questions.length;
+
+  if (!allQuestionsAnswered) {
     return (
       <QuestionView
         key={state.questionNumber}
@@ -41,6 +40,11 @@ export function QuestionSeriesView(props: QuestionSeriesProps) {
       />
     );
   } else {
-    return <div>summary</div>;
+    return (
+      <SummaryTableView
+        questionResults={state.questionResults}
+        onDone={props.onDone}
+      />
+    );
   }
 }
