@@ -1,11 +1,8 @@
-import { Button, Space } from "antd";
-import { Card } from "antd";
-import { useState } from "react";
-import { ButtonGreen, ButtonRed, Center } from "./helper_components";
-import { Question } from "./Question";
+import { generateQuestions } from "./question";
+import { QuestionSeriesView } from "./QuestionSeriesView";
 
 function App() {
-  return <Question question="10 + 20" />;
+  return <QuestionSeriesView questions={generateQuestions()} />;
 }
 
 export default App;

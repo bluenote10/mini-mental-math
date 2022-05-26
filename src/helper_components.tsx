@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Button } from "antd";
+import { Button, ButtonProps } from "antd";
 
 type GenericProps = {
   children: React.ReactNode;
@@ -32,21 +32,21 @@ const GREEN = "#52c41a";
 // two colors internally, and modifying the class requires a wrapper div:
 // https://stackoverflow.com/questions/56718231/is-there-a-way-to-change-antd-internal-buttons-color
 
-export function ButtonRed({ children, style }: GenericProps) {
+export function ButtonRed(props: ButtonProps) {
   return (
     <ButtonWrapper color={RED}>
-      <Button type="primary" style={{ ...style }}>
-        {children}
+      <Button type="primary" {...props}>
+        {props.children}
       </Button>
     </ButtonWrapper>
   );
 }
 
-export function ButtonGreen({ children, style }: GenericProps) {
+export function ButtonGreen(props: ButtonProps) {
   return (
     <ButtonWrapper color={GREEN}>
-      <Button type="primary" style={{ ...style }}>
-        {children}
+      <Button type="primary" {...props}>
+        {props.children}
       </Button>
     </ButtonWrapper>
   );
