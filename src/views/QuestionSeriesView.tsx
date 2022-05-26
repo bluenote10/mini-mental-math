@@ -24,7 +24,7 @@ export function QuestionSeriesView(props: QuestionSeriesProps) {
       questionNumber: s.questionNumber + 1,
       questionResults: [
         ...s.questionResults,
-        { correct, time, type: props.questions[s.questionNumber].type },
+        { correct, time, type: props.questions[s.questionNumber - 1].type },
       ],
     }));
   };

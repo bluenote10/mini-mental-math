@@ -23,7 +23,6 @@ const paddingFooter = 20;
 export function QuestionView(props: QuestionProps) {
   const startTime = useRef(new Date());
   const endTime = useRef(new Date());
-  console.log(startTime.current);
 
   const [state, setState] = useState<QuestionState>("question");
 
