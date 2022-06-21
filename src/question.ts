@@ -30,12 +30,20 @@ function randSwap<T>(a: T, b: T): [T, T] {
   }
 }
 
+function formatWithSeparators(x: number): string {
+  return x.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, "'");
+}
+
+function genRange(low: number, high: number) {
+  return Math.floor(Math.random() * (high - low + 1)) + low;
+}
+
 function genDigit(): number {
-  return Math.floor(Math.random() * 10);
+  return genRange(0, 9);
 }
 
 function genNonZeroDigit(): number {
-  return 1 + Math.floor(Math.random() * 9);
+  return genRange(1, 9);
 }
 
 function genNumberWithDigits(n: number): number {
@@ -65,6 +73,14 @@ function genTeen(): number {
   return randChoice([11, 12, 13, 14, 15, 16, 17, 18, 19, 20]);
 }
 
+function genOrderOfMagnitude(orders: number) {
+  let choices = [1];
+  for (let order = 1; order <= orders; ++order) {
+    choices.push(Math.pow(10, order));
+  }
+  return randChoice(choices);
+}
+
 function addTwo(): Question {
   const a = genNumberWithDigits(3);
   const b = genNumberWithDigits(3);
@@ -76,16 +92,40 @@ function addTwo(): Question {
   };
 }
 
-function addFour(): Question {
-  const a = genNumberWithDigits(2);
-  const b = genNumberWithDigits(2);
-  const c = genNumberWithDigits(2);
-  const d = genNumberWithDigits(2);
+function addFour(factor: number = 1): Question {
+  const a = genNumberWithDigits(2) * factor;
+  const b = genNumberWithDigits(2) * factor;
+  const c = genNumberWithDigits(2) * factor;
+  const d = genNumberWithDigits(2) * factor;
   const result = a + b + c + d;
   return {
-    question: `${a} + ${b} + ${c} + ${d}`,
+    question:
+      factor >= 1
+        ? `${a} + ${b} + ${c} + ${d}`
+        : `${a.toFixed(2)} + ${b.toFixed(2)} + ${c.toFixed(2)} + ${d.toFixed(
+            2
+          )}`,
     answer: `${result}`,
-    type: "Add four",
+    type: `Add four (factor)`,
+  };
+}
+
+function subtractFour(factor: number = 1): Question {
+  const a = genNumberWithDigits(2) * factor * 2;
+  const b = genNumberWithDigits(2) * factor;
+  const c = genNumberWithDigits(2) * factor;
+  const d = genNumberWithDigits(2) * factor;
+  const result = a - b - c - d;
+  return {
+    question:
+      factor >= 1
+        ? `${a} - ${b} - ${c} - ${d}`
+        : `${a.toFixed(2)} - ${b.toFixed(2)} - ${c.toFixed(2)} - ${d.toFixed(
+            2
+          )}`,
+
+    answer: `${result}`,
+    type: `Subtract four (factor)`,
   };
 }
 
@@ -116,7 +156,6 @@ function divideTwo(): Question {
 function multiplyTwoTeen(): Question {
   let a = genTeen();
   let b = genTeen();
-  [a, b] = randSwap(a, b);
   const result = a * b;
   return {
     question: `${a} · ${b}`,
@@ -128,12 +167,33 @@ function multiplyTwoTeen(): Question {
 function divideTwoTeen(): Question {
   let a = genTeen();
   let b = genTeen();
-  [a, b] = randSwap(a, b);
   const result = a * b;
   return {
     question: `${result} / ${a}`,
     answer: `${b}`,
     type: "Divide two (1X)",
+  };
+}
+
+function multiplyMagnitudes(): Question {
+  let a = genRange(2, 20) * genOrderOfMagnitude(4);
+  let b = genRange(2, 20) * genOrderOfMagnitude(4);
+  const result = a * b;
+  return {
+    question: `${formatWithSeparators(a)} · ${formatWithSeparators(b)}`,
+    answer: `${formatWithSeparators(result)}`,
+    type: "Multiply two (orders of magnitudes)",
+  };
+}
+
+function divideMagnitudes(): Question {
+  let a = genRange(2, 20) * genOrderOfMagnitude(4);
+  let b = genRange(2, 20) * genOrderOfMagnitude(4);
+  const result = a * b;
+  return {
+    question: `${formatWithSeparators(result)} / ${formatWithSeparators(a)}`,
+    answer: `${formatWithSeparators(b)}`,
+    type: "Divide two (orders of magnitudes)",
   };
 }
 
@@ -153,7 +213,7 @@ export function prepareGenerators(
   return generators;
 }
 
-export function generateQuestions(numToGenerate: number = 10): Questions {
+export function generateQuestions(numToGenerate: number = 20): Questions {
   const baseGenerators = [
     multiplyTwo,
     divideTwo,
@@ -161,6 +221,20 @@ export function generateQuestions(numToGenerate: number = 10): Questions {
     divideTwoTeen,
     addTwo,
     addFour,
+    () => addFour(0.1),
+    subtractFour,
+    multiplyMagnitudes,
+    multiplyMagnitudes,
+    multiplyMagnitudes,
+    multiplyMagnitudes,
+    multiplyMagnitudes,
+    multiplyMagnitudes,
+    divideMagnitudes,
+    divideMagnitudes,
+    divideMagnitudes,
+    divideMagnitudes,
+    divideMagnitudes,
+    divideMagnitudes,
   ];
   return prepareGenerators(baseGenerators, numToGenerate).map((gen) => gen());
 }
